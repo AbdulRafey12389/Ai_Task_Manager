@@ -14,11 +14,10 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
-        "baseUrl": ".",
+    "noImplicitAny": false,
+    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     },
 
     /* Linting */
