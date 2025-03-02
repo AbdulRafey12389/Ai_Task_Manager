@@ -2,7 +2,7 @@
 import { Outlet } from 'react-router';
 
 // COMPONENTS...
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import AppSidebar from '@/components/AppSidebar';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
@@ -14,10 +14,10 @@ function AppLayout() {
         disableHoverableContent
       >
         <AppSidebar />
+        <main className='flex-1'>
+          <Outlet />
+        </main>
       </TooltipProvider>
-      <SidebarTrigger />
-      <div>sdasd</div>
-      <Outlet />
     </SidebarProvider>
   );
 }
