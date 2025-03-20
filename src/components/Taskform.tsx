@@ -57,7 +57,7 @@ const DEFAULT_FORM_DATA: TaskForm = {
   content: '',
   due_date: null,
   completed: false,
-  projectId: null,
+  project: null,
 };
 
 const Taskform: React.FC<TaskformProps> = ({
@@ -69,7 +69,7 @@ const Taskform: React.FC<TaskformProps> = ({
 }) => {
   const [taskContent, setTaskContent] = useState(defaultFormData.content);
   const [dueDate, setDueDate] = useState(defaultFormData.due_date);
-  const [projectId, setProjectId] = useState(defaultFormData.projectId);
+  const [projectId, setProjectId] = useState(defaultFormData.project);
 
   const [projectName, setProjectName] = useState('');
   const [projectColorHex, setProjectColorHex] = useState('');
@@ -84,7 +84,7 @@ const Taskform: React.FC<TaskformProps> = ({
       ...prevFormData,
       content: taskContent,
       due_date: dueDate,
-      projectId,
+      project: projectId,
     }));
   }, [taskContent, dueDate, projectId]);
 
@@ -106,7 +106,7 @@ const Taskform: React.FC<TaskformProps> = ({
   }, [taskContent, onSubmit, formData]);
 
   return (
-    <Card className='focus-within:border-foreground/30'>
+    <Card className={cn('focus-within:border-foreground/30', className)}>
       <CardContent className='p-2'>
         <Textarea
           className='!border-0 !ring-0 mb-2 p-1'

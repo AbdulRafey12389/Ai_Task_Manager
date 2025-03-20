@@ -1,6 +1,7 @@
 // NODE MODULES...
 import { useState } from 'react';
 import { useFetcher, useLoaderData } from 'react-router';
+import { startOfToday } from 'date-fns';
 
 // COMPONENTS...
 import Head from '@/components/Head';
@@ -12,10 +13,13 @@ import Taskform from '@/components/Taskform';
 import TaskCard from '@/components/TaskCard';
 import TaskCardSkeleton from '@/components/TaskCardSkeleton';
 
+// ASSETS...
+import { CheckCircle2 } from 'lucide-react';
+
 // TYPES...
 import type { Models } from 'appwrite';
 
-function InboxPage() {
+function TodayTaskPage() {
   const [taskFormShow, setTaskFormShow] = useState(false);
   const fetcher = useFetcher();
   const { tasks } = useLoaderData<{
@@ -24,12 +28,21 @@ function InboxPage() {
 
   return (
     <>
-      <Head title='Inbox - Tasky AI' />
-      <TopAppBar title='inbox' />
+      <Head title='Today - Tasky AI' />
+      <TopAppBar
+        title='Today'
+        taskCount={tasks.total}
+      />
 
       <Page>
         <PageHeader>
-          <PageTitle>Inbox</PageTitle>
+          <PageTitle>Today</PageTitle>
+
+          {tasks.total > 0 && (
+            <div className='flex items-center gap-1.5 text-sm text-muted-foreground'>
+              <CheckCircle2 size={16} /> {tasks.total} tasks
+            </div>
+          )}
         </PageHeader>
 
         <PageList>
@@ -51,11 +64,16 @@ function InboxPage() {
           {!taskFormShow && (
             <TaskCreateButton onClick={() => setTaskFormShow(true)} />
           )}
-          {!tasks?.total && !taskFormShow && <TaskEmtyState type='inbox' />}
+          {!tasks?.total && !taskFormShow && <TaskEmtyState />}
 
           {taskFormShow && (
             <Taskform
               mode='create'
+              defaultFormData={{
+                content: '',
+                due_date: startOfToday(),
+                project: null,
+              }}
               className='mt-1'
               onCencel={() => setTaskFormShow(false)}
               onSubmit={(formData) => {
@@ -74,4 +92,4 @@ function InboxPage() {
   );
 }
 
-export default InboxPage;
+export default TodayTaskPage;

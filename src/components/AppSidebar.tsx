@@ -1,5 +1,5 @@
 // NODE MODULES...
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 import { UserButton } from '@clerk/clerk-react';
 
 // COMPONENTS...
@@ -16,6 +16,7 @@ import {
   SidebarMenuBadge,
   SidebarGroupAction,
   SidebarGroupLabel,
+  useSidebar,
 } from '@/components/ui/sidebar';
 import {
   Collapsible,
@@ -37,6 +38,9 @@ import { SIDEBAR_LINKS } from '@/constants';
 import { ChevronRight, CirclePlus, Plus } from 'lucide-react';
 
 function AppSidebar() {
+  const location = useLocation();
+  const { isMobile, setOpenMobile } = useSidebar();
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -64,7 +68,13 @@ function AppSidebar() {
               {/* SIDEBAR LINKS */}
               {SIDEBAR_LINKS.map((item, index) => (
                 <SidebarMenuItem key={index}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={location.pathname === item.href}
+                    onClick={() => {
+                      if (isMobile) setOpenMobile(false);
+                    }}
+                  >
                     <Link to={item.href}>
                       <item.icon />
                       <span>{item.label}</span>

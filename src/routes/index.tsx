@@ -7,6 +7,9 @@ import RegisterPage from '@/pages/RegisterPage';
 import LoginPage from '@/pages/LoginPage';
 import AuthSyncPage from '@/pages/AuthSyncPage';
 import InboxPage from '@/pages/InboxPage';
+import TodayTaskPage from '@/pages/TodayTaskPage';
+import UpcomingTaskPage from '@/pages/UpcomingTaskPage';
+import CompletedTaskPage from '@/pages/CompletedTaskPage';
 
 // LAYOUTS...
 import RootLayout from '../layouts/RootLayout';
@@ -17,6 +20,12 @@ import RootErrorBoundary from '@/pages/RootErrorBoundary';
 
 // ACTIONS...
 import appAction from '@/routes/actions/appAction';
+
+// LOADERS...
+import inboxTaskLoader from '@/routes/loaders/inboxLoader';
+import todayTaskLoader from './loaders/todayTaskLoader';
+import upcomingTaskLoader from './loaders/upcomingTaskLoader';
+import completedTaskLoader from './loaders/completedTaskLoader';
 
 // TYPES...
 import type { RouteObject } from 'react-router';
@@ -45,7 +54,26 @@ const rootRouteChildren: RouteObject[] = [
 const AppRouteChildren: RouteObject[] = [
   {
     path: 'inbox',
+    loader: inboxTaskLoader,
     element: <InboxPage />,
+  },
+
+  {
+    path: 'today',
+    loader: todayTaskLoader,
+    element: <TodayTaskPage />,
+  },
+
+  {
+    path: 'upcoming',
+    loader: upcomingTaskLoader,
+    element: <UpcomingTaskPage />,
+  },
+
+  {
+    path: 'completed',
+    loader: completedTaskLoader,
+    element: <CompletedTaskPage />,
   },
 ];
 
