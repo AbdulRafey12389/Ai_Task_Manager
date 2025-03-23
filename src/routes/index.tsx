@@ -10,6 +10,8 @@ import InboxPage from '@/pages/InboxPage';
 import TodayTaskPage from '@/pages/TodayTaskPage';
 import UpcomingTaskPage from '@/pages/UpcomingTaskPage';
 import CompletedTaskPage from '@/pages/CompletedTaskPage';
+import ProjectsPage from '@/pages/ProjectsPage';
+import ProjectDetailPage from '@/pages/ProjectDetailPage';
 
 // LAYOUTS...
 import RootLayout from '../layouts/RootLayout';
@@ -20,12 +22,16 @@ import RootErrorBoundary from '@/pages/RootErrorBoundary';
 
 // ACTIONS...
 import appAction from '@/routes/actions/appAction';
+import projectAction from '@/routes/actions/projectAction';
 
 // LOADERS...
 import inboxTaskLoader from '@/routes/loaders/inboxLoader';
-import todayTaskLoader from './loaders/todayTaskLoader';
-import upcomingTaskLoader from './loaders/upcomingTaskLoader';
-import completedTaskLoader from './loaders/completedTaskLoader';
+import todayTaskLoader from '@/routes/loaders/todayTaskLoader';
+import upcomingTaskLoader from '@/routes/loaders/upcomingTaskLoader';
+import completedTaskLoader from '@/routes/loaders/completedTaskLoader';
+import projectsLoader from '@/routes/loaders/projectsLoader';
+import projectsDetailLoader from '@/routes/loaders/projectsDetailLoader';
+import appLoader from '@/routes/loaders/appLoader';
 
 // TYPES...
 import type { RouteObject } from 'react-router';
@@ -75,6 +81,20 @@ const AppRouteChildren: RouteObject[] = [
     loader: completedTaskLoader,
     element: <CompletedTaskPage />,
   },
+
+  {
+    path: 'projects',
+    element: <ProjectsPage />,
+    action: projectAction,
+    loader: projectsLoader,
+  },
+
+  {
+    path: 'projects/:projectId',
+    element: <ProjectDetailPage />,
+    // action: projectAction,
+    loader: projectsDetailLoader,
+  },
 ];
 
 const router = createBrowserRouter([
@@ -90,6 +110,7 @@ const router = createBrowserRouter([
     element: <AppLayout />,
     children: AppRouteChildren,
     action: appAction,
+    loader: appLoader,
   },
 ]);
 

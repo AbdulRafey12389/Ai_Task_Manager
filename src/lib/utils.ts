@@ -86,8 +86,6 @@ export function getUserId(): string {
 // TRUNCATES A STRING TO A SPECIFIED LENGTH AND APPENDS AND ELLIPSIS...
 export function truncateString(str: string, maxLength: number): string {
   if (str.length > maxLength) {
-    console.log(maxLength - 1);
-
     return str.slice(0, maxLength - 1) + '...';
   }
 

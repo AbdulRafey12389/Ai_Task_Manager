@@ -100,12 +100,14 @@ const TaskCard: React.FC<TaskCardProps> = ({
             onClick={async () => {
               await handleTaskComplete(!task.completed);
 
-              toast('1 task completed', {
-                action: {
-                  label: 'Undo',
-                  onClick: handleTaskComplete.bind(null, false),
-                },
-              });
+              if (!task.completed) {
+                toast('1 task completed', {
+                  action: {
+                    label: 'Undo',
+                    onClick: handleTaskComplete.bind(null, false),
+                  },
+                });
+              }
             }}
           >
             <Check

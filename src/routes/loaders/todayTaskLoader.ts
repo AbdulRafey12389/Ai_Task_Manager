@@ -30,8 +30,6 @@ const getTask = async () => {
 const todayTaskLoader: LoaderFunction = async () => {
   const tasks = await getTask();
 
-  console.log(tasks);
-
   return { tasks };
 };
 

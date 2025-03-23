@@ -31,9 +31,13 @@ import {
 } from '@/components/ui/command';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
+// HOOKS...
+import { useProjects } from '@/contexts/ProjectContext';
+
 // ASSETS...
 import {
   CalendarIcon,
+  Check,
   ChevronDown,
   Hash,
   Inbox,
@@ -44,6 +48,7 @@ import {
 // TYPES...
 import type { ClassValue } from 'clsx';
 import type { TaskForm } from '@/types';
+import { Models } from 'appwrite';
 
 type TaskformProps = {
   defaultFormData?: TaskForm;
@@ -67,6 +72,8 @@ const Taskform: React.FC<TaskformProps> = ({
   onCencel,
   onSubmit,
 }) => {
+  const projects = useProjects();
+
   const [taskContent, setTaskContent] = useState(defaultFormData.content);
   const [dueDate, setDueDate] = useState(defaultFormData.due_date);
   const [projectId, setProjectId] = useState(defaultFormData.project);
@@ -78,6 +85,17 @@ const Taskform: React.FC<TaskformProps> = ({
   const [projectOpen, setProjectOpen] = useState(false);
 
   const [formData, setFormData] = useState(defaultFormData);
+
+  useEffect(() => {
+    if (projectId) {
+      const { name, color_hex } = projects?.documents.find(
+        ({ $id }) => projectId === $id,
+      ) as Models.Document;
+
+      setProjectName(name);
+      setProjectColorHex(color_hex);
+    }
+  }, [projects, projectId]);
 
   useEffect(() => {
     setFormData((prevFormData) => ({
@@ -179,7 +197,6 @@ const Taskform: React.FC<TaskformProps> = ({
         <Popover
           open={projectOpen}
           onOpenChange={setProjectOpen}
-          model
         >
           <PopoverTrigger asChild>
             <Button
@@ -188,7 +205,9 @@ const Taskform: React.FC<TaskformProps> = ({
               aria-expanded={projectOpen}
               className='max-w-max'
             >
-              <Inbox /> Inbox <ChevronDown />
+              {projectName ? <Hash color={projectColorHex} /> : <Inbox />}
+              <span className='truncate'>{projectName || 'Inbox'}</span>{' '}
+              <ChevronDown />
             </Button>
           </PopoverTrigger>
 
@@ -204,9 +223,30 @@ const Taskform: React.FC<TaskformProps> = ({
                   <CommandEmpty>No project found.</CommandEmpty>
 
                   <CommandGroup>
-                    <CommandItem>
-                      <Hash /> project 1
-                    </CommandItem>
+                    {projects?.documents.map(({ $id, name, color_hex }) => (
+                      <CommandItem
+                        key={$id}
+                        onSelect={(selectedValue) => {
+                          setProjectName(
+                            selectedValue === projectName ? '' : name,
+                          );
+                          setProjectId(
+                            selectedValue === projectName ? null : $id,
+                          );
+
+                          setProjectColorHex(
+                            selectedValue === projectName
+                              ? undefined
+                              : color_hex,
+                          );
+
+                          setProjectOpen(false);
+                        }}
+                      >
+                        <Hash color={color_hex} /> {name}
+                        {projectName === name && <Check className='ms-auto' />}
+                      </CommandItem>
+                    ))}
                   </CommandGroup>
                 </ScrollArea>
               </CommandList>

@@ -17,6 +17,7 @@ import {
   SidebarGroupAction,
   SidebarGroupLabel,
   useSidebar,
+  SidebarMenuAction,
 } from '@/components/ui/sidebar';
 import {
   Collapsible,
@@ -30,16 +31,29 @@ import {
 } from '@/components/ui/tooltip';
 import TaskFormDialog from '@/components/TaskFormDialog';
 import Logo from '@/components/Logo';
+import ProjectFormDialog from './ProjectFormDialog';
+import ProjectActionMenu from './ProjectActionMenu';
+
+// HOOKS...
+import { useProjects } from '@/contexts/ProjectContext';
 
 // CONTANTS...
 import { SIDEBAR_LINKS } from '@/constants';
 
 // ASSETS...
-import { ChevronRight, CirclePlus, Plus } from 'lucide-react';
+import {
+  ChevronRight,
+  CirclePlus,
+  Hash,
+  Plus,
+  MoreHorizontal,
+} from 'lucide-react';
 
 function AppSidebar() {
   const location = useLocation();
   const { isMobile, setOpenMobile } = useSidebar();
+
+  const projects = useProjects();
 
   return (
     <Sidebar>
@@ -104,23 +118,86 @@ function AppSidebar() {
               </CollapsibleTrigger>
             </SidebarGroupLabel>
 
+            {/* PROJECT CREATE BUTTON */}
             <Tooltip>
-              <TooltipTrigger asChild>
-                <SidebarGroupAction aria-label='Add project'>
-                  <Plus />
-                </SidebarGroupAction>
-              </TooltipTrigger>
+              <ProjectFormDialog method='POST'>
+                <TooltipTrigger asChild>
+                  <SidebarGroupAction aria-label='Add project'>
+                    <Plus />
+                  </SidebarGroupAction>
+                </TooltipTrigger>
+              </ProjectFormDialog>
               <TooltipContent side='right'>Add project</TooltipContent>
             </Tooltip>
 
             <CollapsibleContent>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  <SidebarMenuItem>
-                    <p className='text-muted-foreground text-sm p-2'>
-                      Click + to add some project
-                    </p>
-                  </SidebarMenuItem>
+                  {projects?.documents
+                    .slice(0, 5)
+                    .map(({ $id, name, color_name, color_hex }) => (
+                      <SidebarMenuItem key={$id}>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={
+                            location.pathname === `/app/projects/${$id}`
+                          }
+                          onClick={() => {
+                            if (isMobile) setOpenMobile(false);
+                          }}
+                        >
+                          <Link to={`/app/projects/${$id}`}>
+                            <Hash color={color_hex} />
+
+                            <span>{name}</span>
+                          </Link>
+                        </SidebarMenuButton>
+
+                        <ProjectActionMenu
+                          defaultFormData={{
+                            id: $id,
+                            name,
+                            color_name,
+                            color_hex,
+                          }}
+                          side='right'
+                          align='start'
+                        >
+                          <SidebarMenuAction
+                            aria-label='More actions'
+                            showOnHover
+                            className='bg-sidebar-accent'
+                          >
+                            <MoreHorizontal />
+                          </SidebarMenuAction>
+                        </ProjectActionMenu>
+                      </SidebarMenuItem>
+                    ))}
+
+                  {projects !== null && projects?.total > 5 && (
+                    <SidebarMenuItem>
+                      <SidebarMenuButton
+                        asChild
+                        className='text-muted-foreground'
+                        isActive={location.pathname === `/app/projects`}
+                        onClick={() => {
+                          if (isMobile) setOpenMobile(false);
+                        }}
+                      >
+                        <Link to={`/app/projects`}>
+                          <MoreHorizontal /> All projects
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )}
+
+                  {!projects?.total && (
+                    <SidebarMenuItem>
+                      <p className='text-muted-foreground text-sm p-2'>
+                        Click + to add some project
+                      </p>
+                    </SidebarMenuItem>
+                  )}
                 </SidebarMenu>
               </SidebarGroupContent>
             </CollapsibleContent>
