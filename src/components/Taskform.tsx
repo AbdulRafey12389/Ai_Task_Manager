@@ -163,6 +163,7 @@ const Taskform: React.FC<TaskformProps> = ({
                 // disabled={{ before: new Date() }}
                 mode='single'
                 initialFocus
+                selected={dueDate ? new Date(dueDate) : undefined}
                 onSelect={(selected) => {
                   setDueDate(selected || null);
                   setDueDataOpen(false);

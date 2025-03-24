@@ -154,7 +154,10 @@ const TaskCard: React.FC<TaskCardProps> = ({
                     </div>
 
                     {task.project ? (
-                      <Hash size={14} />
+                      <Hash
+                        size={14}
+                        color={task.project.color_hex}
+                      />
                     ) : (
                       <Inbox
                         size={14}

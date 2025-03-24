@@ -14,13 +14,13 @@ import type { LoaderFunction } from 'react-router';
 import type { Models } from 'appwrite';
 
 type TaskCounts = {
-  inboxTask: number;
-  todayTask: number;
+  inboxTasks: number;
+  todayTasks: number;
 };
 
 export type AppLoaderData = {
   projects: Models.DocumentList<Models.Document>;
-  taskCount: TaskCounts;
+  taskCounts: TaskCounts;
 };
 
 const getProject = async () => {
@@ -39,8 +39,8 @@ const getProject = async () => {
 
 const getTaskCount = async () => {
   const taskCounts: TaskCounts = {
-    inboxTask: 0,
-    todayTask: 0,
+    inboxTasks: 0,
+    todayTasks: 0,
   };
 
   try {
@@ -56,7 +56,7 @@ const getTaskCount = async () => {
       ],
     );
 
-    taskCounts.inboxTask = totalInboxTasks;
+    taskCounts.inboxTasks = totalInboxTasks;
   } catch (error) {
     console.error('Error getting inbox task count: ', error);
     throw new Error('Error getting inbox task count');
@@ -78,7 +78,7 @@ const getTaskCount = async () => {
       ],
     );
 
-    taskCounts.todayTask = totalTodayTasks;
+    taskCounts.todayTasks = totalTodayTasks;
   } catch (error) {
     console.error('Error getting inbox task count: ', error);
     throw new Error('Error getting inbox task count');
@@ -93,9 +93,9 @@ const appLoader: LoaderFunction = async () => {
   if (!userId) redirect('/login');
 
   const projects = await getProject();
-  const taskCount = await getTaskCount();
+  const taskCounts = await getTaskCount();
 
-  return { projects, taskCount };
+  return { projects, taskCounts };
 };
 
 export default appLoader;

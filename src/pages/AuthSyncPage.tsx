@@ -29,7 +29,7 @@ function AuthSyncPage() {
     }
   }, [userId, isLoaded, isSignedIn, navigate]);
 
-  return <div>AuthSyncPage</div>;
+  return <div></div>;
 }
 
 export default AuthSyncPage;

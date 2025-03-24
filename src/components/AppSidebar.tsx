@@ -1,5 +1,5 @@
 // NODE MODULES...
-import { Link, useLocation } from 'react-router';
+import { Link, useLoaderData, useLocation } from 'react-router';
 import { UserButton } from '@clerk/clerk-react';
 
 // COMPONENTS...
@@ -49,9 +49,13 @@ import {
   MoreHorizontal,
 } from 'lucide-react';
 
+// TYPES...
+import type { AppLoaderData } from '@/routes/loaders/appLoader';
+
 function AppSidebar() {
   const location = useLocation();
   const { isMobile, setOpenMobile } = useSidebar();
+  const { taskCounts } = useLoaderData() as AppLoaderData;
 
   const projects = useProjects();
 
@@ -95,7 +99,20 @@ function AppSidebar() {
                     </Link>
                   </SidebarMenuButton>
 
-                  <SidebarMenuBadge>0</SidebarMenuBadge>
+                  {/* SHOW TASK COUNT IN INBOX MENU ITEMS */}
+                  {item.href === '/app/inbox' &&
+                    Boolean(taskCounts?.inboxTasks) && (
+                      <SidebarMenuBadge>
+                        {taskCounts?.inboxTasks}
+                      </SidebarMenuBadge>
+                    )}
+
+                  {item.href === '/app/today' &&
+                    Boolean(taskCounts?.todayTasks) && (
+                      <SidebarMenuBadge>
+                        {taskCounts?.todayTasks}
+                      </SidebarMenuBadge>
+                    )}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
