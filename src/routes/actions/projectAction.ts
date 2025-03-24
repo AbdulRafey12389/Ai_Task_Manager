@@ -1,6 +1,5 @@
 // NODE MODULES...
 import { redirect } from 'react-router';
-import { toast } from 'sonner';
 
 // CUSTOM MODULES...
 import { databases } from '@/lib/appwrite';
